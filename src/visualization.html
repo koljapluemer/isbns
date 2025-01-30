@@ -30,12 +30,24 @@
         "md5_files",
         "libby_files",
         "ol_files"
-    ];
+    ]; 
 
     const TILE_SIZE = 400;
     const WIDTH = 200000;
     const HEIGHT = 400;
     const MAX_LEVEL = Math.max(1, Math.ceil(Math.log2(WIDTH))); // estimate the max level
+
+
+    function populateDropdowns() {
+        document.querySelectorAll('.dataset-select').forEach(select => {
+            DATASETS.forEach(dataset => {
+                let option = document.createElement("option");
+                option.value = dataset;
+                option.textContent = dataset;
+                select.appendChild(option);
+            });
+        });
+    }
 
     async function initializeDeck() {
         const dimensions = {
@@ -126,6 +138,7 @@
         }
     }
 
+    populateDropdowns();
     initializeDeck();
 
 </script>
