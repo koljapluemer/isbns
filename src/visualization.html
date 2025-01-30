@@ -10,8 +10,16 @@
 
 <body>
 
-    <div id="deckGLContainerFirst" class="deckGLContainer"></div>
-    <div id="deckGLContainerSecond" class="deckGLContainer"></div>
+    <div class="deck-wrapper">
+        <select id="select1" class="dataset-select"></select>
+        <div id="deckGLContainer1" class="deckGLContainer"></div>
+    </div>
+
+    <div class="deck-wrapper">
+        <select id="select2" class="dataset-select"></select>
+        <div id="deckGLContainer2" class="deckGLContainer"></div>
+    </div>
+
 
 </body>
 
@@ -72,7 +80,7 @@
         const tileLayer1 = createTileLayer(DATASETS[0]);
         const tileLayer2 = createTileLayer(DATASETS[1]);
         const deck1 = new deck.DeckGL({
-            container: document.getElementById("deckGLContainerFirst"),
+            container: document.getElementById("deckGLContainer1"),
             views: new deck.OrthographicView({ id: "ortho" }),
             initialViewState: {
                 target: [dimensions.width / 2, dimensions.height / 2, 0],
@@ -84,7 +92,7 @@
         });
 
         const deck2 = new deck.DeckGL({
-            container: document.getElementById("deckGLContainerSecond"),
+            container: document.getElementById("deckGLContainer2"),
             views: new deck.OrthographicView({ id: "ortho" }),
             initialViewState: {
                 target: [dimensions.width / 2, dimensions.height / 2, 0],
@@ -134,7 +142,7 @@
     .deckGLContainer {
         width: 90%;
         height: 100px;
-        margin: 20px auto ;
+        margin: 20px auto;
         border: 2px solid black;
     }
 </style>
