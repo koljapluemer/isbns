@@ -28,13 +28,22 @@ os.makedirs(os.path.dirname(output_filename), exist_ok=True)
 # ------------------------------------------------------------------------------
 # 1) Map ISBN Ranges to Pixels
 # ------------------------------------------------------------------------------
+
+last_prefix = "xxx"
+last_color = (255, 255, 255)
 def get_country_color(isbn):
+    global last_prefix
+    global last_color
     """
     Given an ISBN number, determine the corresponding country and return its color.
     """
     isbn_str = str(isbn)
+    if isbn_str.startswith(last_prefix.replace("-", "")):
+        return last_color
     for prefix, country in country_ranges.items():
         if isbn_str.startswith(prefix.replace("-", "")):  # Match without hyphens
+            last_prefix = prefix
+            last_color = country_colors[prefix]
             return country_colors[prefix]
     return (255, 255, 255)  # Default to white if no match
 

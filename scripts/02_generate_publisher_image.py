@@ -9,7 +9,7 @@ import json
 # ------------------------------------------------------------------------------
 INPUT="data/publisher_ranges.json"
 output_filename = "data/images/publisher_ranges.png"
-smaller_scale = 100  # Controls downscaling factor
+smaller_scale = 50  # Controls downscaling factor
 ISBN_BASE = 978000000000  # Lowest ISBN
 MAX_ISBN = 979999999999  # Highest ISBN
 IMAGE_WIDTH = 100000 // smaller_scale  # Wide representation
@@ -31,13 +31,21 @@ os.makedirs(os.path.dirname(output_filename), exist_ok=True)
 # ------------------------------------------------------------------------------
 # 1) Map ISBN Ranges to Pixels
 # ------------------------------------------------------------------------------
+last_prefix = "xxx"
+last_color = (255, 255, 255)
 def get_publisher_color(isbn):
+    global last_prefix
+    global last_color
     """
     Given an ISBN number, determine the corresponding publisher and return its color.
     """
     isbn_str = str(isbn)
+    if isbn_str.startswith(last_prefix.replace("-", "")):
+        return last_color
     for prefix, publisher in publisher_ranges.items():
         if isbn_str.startswith(prefix.replace("-", "")):  # Match without hyphens
+            last_prefix = prefix
+            last_color = publisher_colors[prefix]
             return publisher_colors[prefix]
     return (255, 255, 255)  # Default to white if no match
 
