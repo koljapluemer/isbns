@@ -40,10 +40,10 @@
     // make an eventlistener to find out whether the mouse is currently above #deckGLContainer1 or #deckGLContainer2 (or none):
     let hoveringElement = null;
     document.getElementById("deck1").addEventListener("mouseover", function () {
-        hoveringElement = "deck1"
+        hoveringElement = "deckGLContainer1"
     });
     document.getElementById("deck2").addEventListener("mouseover", function () {
-        hoveringElement = "deck2"
+        hoveringElement = "deckGLContainer2"
     });
 
 
@@ -58,7 +58,7 @@
         });
     }
 
-    async function initializeDeck() {
+    async function loadDeck(containerID, tileset) {
         const dimensions = {
             width: WIDTH,
             height: HEIGHT,
@@ -97,52 +97,25 @@
                 renderSubLayers: renderBitmapLayer,
             });
         };
-        const tileLayer1 = createTileLayer(DATASETS[0]);
-        const tileLayer2 = createTileLayer(DATASETS[1]);
-        const deck1 = new deck.DeckGL({
-            container: document.getElementById("deckGLContainer1"),
+        const tileLayer = createTileLayer(tileset);
+        const aDeck = new deck.DeckGL({
+            container: document.getElementById(containerID),
             views: new deck.OrthographicView({ id: "ortho" }),
             initialViewState: {
                 target: [dimensions.width / 2, dimensions.height / 2, 0],
                 zoom: -5,
             },
             controller: true,
-            layers: [tileLayer1],
-            onViewStateChange: ({ viewState }) => {
-                // only if mouse is currently hovering over this decks container #deckGLContainer1 (and NOT the other deck)
-                if (hoveringElement === "deck1") {
-                    syncZoomAndPan(viewState, deck2);
-                }
-            }
+            layers: [tileLayer],
         });
 
-        const deck2 = new deck.DeckGL({
-            container: document.getElementById("deckGLContainer2"),
-            views: new deck.OrthographicView({ id: "ortho" }),
-            initialViewState: {
-                target: [dimensions.width / 2, dimensions.height / 2, 0],
-                zoom: -5,
-            },
-            controller: true,
-            layers: [tileLayer2],
-            onViewStateChange: ({ viewState }) => {
-                // only if mouse is currently hovering over this decks container #deckGLContainer2 (and NOT the other deck)
-                if (hoveringElement === "deck2") {
-                    syncZoomAndPan(viewState, deck1);
-                }
-            }
-        });
-
-        // function to adapt zoom and pan of the other deck when one is being moved
-        function syncZoomAndPan(viewState, deckToChange) {
-            deckToChange.setProps({
-                viewState: viewState
-            });
-        }
+        return aDeck;
     }
 
     populateDropdowns();
-    initializeDeck();
+    
+    loadDeck("deckGLContainer1", DATASETS[0]);
+    loadDeck("deckGLContainer2", DATASETS[1]);
 
 </script>
 <style>
