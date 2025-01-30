@@ -10,12 +10,12 @@
 
 <body>
 
-    <div class="deck-wrapper">
+    <div class="deck-wrapper" id="deck1">
         <select id="select1" class="dataset-select"></select>
         <div id="deckGLContainer1" class="deckGLContainer"></div>
     </div>
 
-    <div class="deck-wrapper">
+    <div class="deck-wrapper" id="deck2">
         <select id="select2" class="dataset-select"></select>
         <div id="deckGLContainer2" class="deckGLContainer"></div>
     </div>
@@ -30,12 +30,21 @@
         "md5_files",
         "libby_files",
         "ol_files"
-    ]; 
+    ];
 
     const TILE_SIZE = 400;
     const WIDTH = 200000;
     const HEIGHT = 400;
     const MAX_LEVEL = Math.max(1, Math.ceil(Math.log2(WIDTH))); // estimate the max level
+
+    // make an eventlistener to find out whether the mouse is currently above #deckGLContainer1 or #deckGLContainer2 (or none):
+    let hoveringElement = null;
+    document.getElementById("deck1").addEventListener("mouseover", function () {
+        hoveringElement = "deck1"
+    });
+    document.getElementById("deck2").addEventListener("mouseover", function () {
+        hoveringElement = "deck2"
+    });
 
 
     function populateDropdowns() {
@@ -83,7 +92,6 @@
                 getTileData: ({ index }) => {
                     const { x, y, z } = index;
                     const path = `${ROOT_URL}/${tileSet}/${dimensions.maxLevel + z}/${x}_${y}.png`;
-                    console.log('trying to load', path);
                     return loaders.load(path)
                 },
                 renderSubLayers: renderBitmapLayer,
@@ -100,7 +108,12 @@
             },
             controller: true,
             layers: [tileLayer1],
-            onViewStateChange: ({ viewState }) => syncZoomAndPan(viewState, deck1)
+            onViewStateChange: ({ viewState }) => {
+                // only if mouse is currently hovering over this decks container #deckGLContainer1 (and NOT the other deck)
+                if (hoveringElement === "deck1") {
+                    syncZoomAndPan(viewState, deck2);
+                }
+            }
         });
 
         const deck2 = new deck.DeckGL({
@@ -112,29 +125,19 @@
             },
             controller: true,
             layers: [tileLayer2],
-            onViewStateChange: ({ viewState }) => syncZoomAndPan(viewState, deck2)
+            onViewStateChange: ({ viewState }) => {
+                // only if mouse is currently hovering over this decks container #deckGLContainer2 (and NOT the other deck)
+                if (hoveringElement === "deck2") {
+                    syncZoomAndPan(viewState, deck1);
+                }
+            }
         });
 
         // function to adapt zoom and pan of the other deck when one is being moved
-        function syncZoomAndPan(viewState, originalDeck) {
-            if (originalDeck == deck1) {
-                deck2.setProps({
-                    viewState: {
-                        ...deck2.viewState,
-                        target: [viewState.target[0], viewState.target[1], 0],
-                        zoom: viewState.zoom
-                    }
-                });
-            } else {
-                deck1.setProps({
-                    viewState: {
-                        ...deck1.viewState,
-                        target: [viewState.target[0], viewState.target[1], 0],
-                        zoom: viewState.zoom
-                    }
-                });
-
-            }
+        function syncZoomAndPan(viewState, deckToChange) {
+            deckToChange.setProps({
+                viewState: viewState
+            });
         }
     }
 
