@@ -108,7 +108,9 @@
             controller: true,
             layers: [tileLayer],
             onViewStateChange: ({ viewState }) => {
-                handleViewChange(viewState);
+                if (hoveringElement === containerID) {
+                    handleViewChange(viewState);
+                }
             },
         });
 
@@ -123,16 +125,12 @@
     const deck2 = loadDeck("deckGLContainer2", DATASETS[1]);
 
     function handleViewChange(viewState) {
-        if (hoveringElement === "deckGLContainer1") {
-            deck2.setProps({
-                viewState: viewState
-            });
-        } else if (hoveringElement === "deckGLContainer2") {
-            deck1.setProps({
-                viewState: viewState
-            });
-        }
-
+        deck2.setProps({
+            viewState: viewState
+        });
+        deck1.setProps({
+            viewState: viewState
+        });
     }
 
 
