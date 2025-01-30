@@ -58,7 +58,7 @@
         });
     }
 
-    async function loadDeck(containerID, tileset) {
+    function loadDeck(containerID, tileset) {
         const dimensions = {
             width: WIDTH,
             height: HEIGHT,
@@ -107,15 +107,34 @@
             },
             controller: true,
             layers: [tileLayer],
+            onViewStateChange: ({ viewState }) => {
+                handleViewChange(viewState);
+            },
         });
+
 
         return aDeck;
     }
 
+
     populateDropdowns();
-    
-    loadDeck("deckGLContainer1", DATASETS[0]);
-    loadDeck("deckGLContainer2", DATASETS[1]);
+
+    const deck1 = loadDeck("deckGLContainer1", DATASETS[0]);
+    const deck2 = loadDeck("deckGLContainer2", DATASETS[1]);
+
+    function handleViewChange(viewState) {
+        if (hoveringElement === "deckGLContainer1") {
+            deck2.setProps({
+                viewState: viewState
+            });
+        } else if (hoveringElement === "deckGLContainer2") {
+            deck1.setProps({
+                viewState: viewState
+            });
+        }
+
+    }
+
 
 </script>
 <style>
