@@ -2,7 +2,7 @@
 
 
 <head>
-    <title>ISBN Maps</title>
+    <title>All the ISBNs</title>
     <script src="https://unpkg.com/deck.gl@9.0.38/dist.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -11,61 +11,83 @@
 <style>
     body {
         margin: 0;
-        font-family: sans-serif;
         width: 100vw;
         height: 100dvh;
         overflow: hidden;
-        background-color: #2c3e50;
-        display: flex; 
+        display: flex;
         flex-direction: column;
         align-self: center;
     }
 
-    .deckGLContainer {
+    main {
         width: 90vw;
+        margin: auto;
+    }
+
+    .deckGLContainer {
         height: 18vh;
+        width: 100%;
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3) inset;
     }
 
     .deck-wrapper {
+        margin-top: 24px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        padding: 24px;
         gap: 12px;
     }
-
-
 </style>
 
 <body>
+    <main>
+        <h1>All the ISBNs</h1>
+        <p>Use the views below to compare ISBN dataset coverage.</p>
 
-    <div class="deck-wrapper" id="deck1">
-        <select id="deckGLContainer1Select" class="dataset-select"></select>
-        <div id="deckGLContainer1" class="deckGLContainer"></div>
-    </div>
+        <div class="deck-wrapper" id="deck1">
+            <select id="deckGLContainer1Select" class="dataset-select"></select>
+            <div id="deckGLContainer1" class="deckGLContainer"></div>
+        </div>
 
-    <div class="deck-wrapper" id="deck2">
-        <select id="deckGLContainer2Select" class="dataset-select"></select>
-        <div id="deckGLContainer2" class="deckGLContainer"></div>
-    </div>
+        <div class="deck-wrapper" id="deck2">
+            <select id="deckGLContainer2Select" class="dataset-select"></select>
+            <div id="deckGLContainer2" class="deckGLContainer"></div>
+        </div>
 
 
+        <center style="margin-top: 20px;">Made by <a href="https://koljapluemer.com/">Kolja Sam</a>.</center>
+    </main>
 </body>
 
 <script type="text/javascript">
     // const ROOT_URL = window.location.origin + window.location.pathname + "/tiles";
     const ROOT_URL = "tiles";
+    // all folders in tiles/
     const DATASETS = [
         "md5_files",
-        // "libby_files",
-        // "ol_files",
         "country_ranges_files",
+        "cadal_ssno_files",
+        "cerlalc_files",
+        "duxiu_ssid_files",
+        "edsebk_files",
+        "gbooks_files",
+        "goodreads_files",
+        "ia_files",
+        "isbndb_files",
+        "isbngrp_files",
+        "libby_files",
+        "nexusstc_download_files",
+        "nexusstc_files",
+        "oclc_files",
+        "ol_dzi",
+        "publisher_ranges_files",
+        "rgb_files",
+        "trantor_files",
     ];
 
     const TILE_SIZE = 400;
-    const WIDTH = 2000;
-    const HEIGHT = 400;
+    const WIDTH = 20000;
+    const HEIGHT = 4000;
     const MAX_LEVEL = Math.max(1, Math.ceil(Math.log2(WIDTH))); // estimate the max level
 
     // make an eventlistener to find out whether the mouse is currently above #deckGLContainer1 or #deckGLContainer2 (or none):
@@ -174,7 +196,7 @@
             views: new deck.OrthographicView({ id: "ortho" }),
             initialViewState: {
                 target: [dimensions.width / 2, dimensions.height / 2, 0],
-                zoom: -5,
+                zoom: -4,
             },
             controller: true,
             layers: [tileLayer],
