@@ -4,7 +4,7 @@
 
 This is my demo for the [ISBN visualization bounty by Anna's Archive](https://annas-archive.org/blog/all-isbns.html).
 
-**You can see it in action [here](https://annas-archive.org/blog/all-isbns.html)**
+**You can see it in action [here](https://koljapluemer.github.io/isbns/)**
 
 
 ## Concept
